@@ -103,5 +103,6 @@ chart = pandas_highcharts.serialize(df, render_to="my-chart", title="Test", kind
 chart = pandas_highcharts.serialize(df, render_to="my-chart", title="Test", kind="barh")
 # Plot C on secondary axis
 chart = pandas_highcharts.serialize(df, render_to="my-chart", title="Test", secondary_y = ["C"])
-
+# Plot on a 1000x700 div
+chart = pandas_highcharts.serialize(df, render_to="my-chart", title="Test", figsize = (1000, 700))
 ```
