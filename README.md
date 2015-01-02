@@ -106,3 +106,8 @@ chart = pandas_highcharts.serialize(df, render_to="my-chart", title="Test", seco
 # Plot on a 1000x700 div
 chart = pandas_highcharts.serialize(df, render_to="my-chart", title="Test", figsize = (1000, 700))
 ```
+
+## Future work ##
+
+* Handle more methods from matplotlib (scatter plot for example)
+* Handle highcharts specific options
