@@ -63,10 +63,11 @@ Install the package using pip
     pip install pandas-highcharts
 
 Import it in your views
-
-    import pandas_highcharts
-    df = ... # create your dataframe here
-    chart = pandas_highcharts.serialize(df, render_to = "my-chart")
+```python
+import pandas_highcharts
+df = ... # create your dataframe here
+chart = pandas_highcharts.serialize(df, render_to = "my-chart")
+```
 
 In your templates
 
