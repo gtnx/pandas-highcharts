@@ -8,52 +8,52 @@
 
 * pandas is the best tool to handle data in Python
 * pandas is able to produce matplotlib plots. They work pretty well but have two major drawbacks
- * Not very web friendly
- * Pretty ugly
+    * Not very web friendly
+    * Pretty ugly
 * Highcharts produce nice, interactive plot in your browser and is very complete
 
 ## Features ##
 
 * Same interface as DataFrame.plot
 * Following parameters are handled
- * data
- * x
- * y
- * kind
- * figsize
- * use_index
- * title
- * grid
- * legend
- * style
- * logx
- * logy
- * loglog
- * xticks
- * yticks
- * xlim
- * ylim
- * rot
- * fontsize
- * position
- * stacked
- * sort_columns
- * secondary_y
- * mark_right
+    * data
+    * x
+    * y
+    * kind
+    * figsize
+    * use_index
+    * title
+    * grid
+    * legend
+    * style
+    * logx
+    * logy
+    * loglog
+    * xticks
+    * yticks
+    * xlim
+    * ylim
+    * rot
+    * fontsize
+    * position
+    * stacked
+    * sort_columns
+    * secondary_y
+    * mark_right
 * Following parameters are not handled (yet) :
- * ax
- * ay
- * subplots
- * sharex
- * sharey
- * layout
- * colormap
- * colorbar
- * layout
- * table
- * yerr
- * xerr
- * kwds
+    * ax
+    * ay
+    * subplots
+    * sharex
+    * sharey
+    * layout
+    * colormap
+    * colorbar
+    * layout
+    * table
+    * yerr
+    * xerr
+    * kwds
 * Static files (highcharts.js) are not embedded
 
 ## Installation ##
