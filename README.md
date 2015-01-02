@@ -59,8 +59,9 @@
 ## Installation ##
 
 Install the package using pip
-
-    pip install pandas-highcharts
+```bash
+pip install pandas-highcharts
+```
 
 Import it in your views
 ```python
@@ -70,5 +71,6 @@ chart = pandas_highcharts.serialize(df, render_to = "my-chart")
 ```
 
 In your templates
-
+```html
     <script type="text/javascript">{{chart|safe}}</script>
+```
