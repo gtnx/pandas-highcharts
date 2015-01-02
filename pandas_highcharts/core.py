@@ -2,31 +2,35 @@
 
 import pandas
 import json
-import re
 import time
 import copy
+
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, pandas.tslib.Timestamp):
             return time.mktime(obj.timetuple()) * 1000
         return json.JSONEncoder.default(self, obj)
- 
+
 
 _pd2hc_kind = {"bar": "column", "barh": "bar", "area": "area", "line": "line"}
+
+
 def pd2hc_kind(kind):
     if kind not in _pd2hc_kind:
         raise TypeError("%(kind)s plots are not yet supported" % locals())
     return _pd2hc_kind[kind]
 
 _pd2hc_linestyle = {"-": "Solid", "--": "Dash", "-.": "DashDot", ":": "Dot"}
+
+
 def pd2hc_linestyle(linestyle):
     if linestyle not in _pd2hc_linestyle:
         raise TypeError("%(linestyle)s linestyles are not yet supported" % locals())
     return _pd2hc_linestyle[linestyle]
 
-def serialize(df, *args, **kwargs):
 
+def serialize(df, *args, **kwargs):
     def serialize_chart(df, output, *args, **kwargs):
         output["chart"] = {"renderTo": kwargs["render_to"]}
         if "figsize" in kwargs:
@@ -37,28 +41,40 @@ def serialize(df, *args, **kwargs):
 
     def serialize_colors(df, output, *args, **kwargs):
         pass
+
     def serialize_credits(df, output, *args, **kwargs):
         pass
+
     def serialize_data(df, output, *args, **kwargs):
         pass
+
     def serialize_drilldown(df, output, *args, **kwargs):
         pass
+
     def serialize_exporting(df, output, *args, **kwargs):
         pass
+
     def serialize_labels(df, output, *args, **kwargs):
         pass
+
     def serialize_legend(df, output, *args, **kwargs):
         output["legend"] = {"enabled": kwargs.get("legend", True)}
+
     def serialize_loading(df, output, *args, **kwargs):
         pass
+
     def serialize_navigation(df, output, *args, **kwargs):
         pass
+
     def serialize_noData(df, output, *args, **kwargs):
         pass
+
     def serialize_pane(df, output, *args, **kwargs):
         pass
+
     def serialize_plotOptions(df, output, *args, **kwargs):
         pass
+
     def serialize_series(df, output, *args, **kwargs):
         def is_secondary(c, **kwargs):
             return c in kwargs.get("secondary_y", [])
@@ -78,12 +94,14 @@ def serialize(df, *args, **kwargs):
 
     def serialize_subtitle(df, output, *args, **kwargs):
         pass
+
     def serialize_title(df, output, *args, **kwargs):
         if "title" in kwargs:
             output["title"] = {"text": kwargs["title"]}
 
     def serialize_tooltip(df, output, *args, **kwargs):
         pass
+
     def serialize_xAxis(df, output, *args, **kwargs):
         output["xAxis"] = {}
         if df.index.name:
@@ -104,6 +122,7 @@ def serialize(df, *args, **kwargs):
             output["xAxis"].setdefault("labels", {})["style"] = {"fontSize": kwargs["fontsize"]}
         if "xticks" in kwargs:
             output["xAxis"]["tickPositions"] = kwargs["xticks"]
+
     def serialize_yAxis(df, output, *args, **kwargs):
         yAxis = {}
         if kwargs.get("grid"):
@@ -128,10 +147,10 @@ def serialize(df, *args, **kwargs):
     output = {}
     if "x" in kwargs:
         df.index = df.pop(kwargs["x"])
-    if kwargs.get("use_index", True) == False:
+    if kwargs.get("use_index", True) is False:
         df = df.reset_index()
     if "y" in kwargs:
-        df = pandas.DataFrame(df, columns = kwargs["y"])
+        df = pandas.DataFrame(df, columns=kwargs["y"])
     serialize_chart(df, output, *args, **kwargs)
     serialize_colors(df, output, *args, **kwargs)
     serialize_credits(df, output, *args, **kwargs)
