@@ -52,3 +52,7 @@ docs/_build/
 
 # PyBuilder
 target/
+pandas_highcharts/models.py
+pandas_highcharts/views.py
+pandas_highcharts/urls.py
+pandas_highcharts/templates/

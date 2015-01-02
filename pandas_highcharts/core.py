@@ -1,0 +1,154 @@
+# -*- coding: UTF-8 -*-
+
+import pandas
+import json
+import re
+import time
+import copy
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, pandas.tslib.Timestamp):
+            return time.mktime(obj.timetuple()) * 1000
+        return json.JSONEncoder.default(self, obj)
+ 
+
+_pd2hc_kind = {"bar": "column", "barh": "bar", "area": "area", "line": "line"}
+def pd2hc_kind(kind):
+    if kind not in _pd2hc_kind:
+        raise TypeError("%(kind)s plots are not yet supported" % locals())
+    return _pd2hc_kind[kind]
+
+_pd2hc_linestyle = {"-": "Solid", "--": "Dash", "-.": "DashDot", ":": "Dot"}
+def pd2hc_linestyle(linestyle):
+    if linestyle not in _pd2hc_linestyle:
+        raise TypeError("%(linestyle)s linestyles are not yet supported" % locals())
+    return _pd2hc_linestyle[linestyle]
+
+def serialize(df, *args, **kwargs):
+
+    def serialize_chart(df, output, *args, **kwargs):
+        output["chart"] = {"renderTo": kwargs["render_to"]}
+        if "figsize" in kwargs:
+            output["chart"]["width"] = kwargs["figsize"][0]
+            output["chart"]["height"] = kwargs["figsize"][1]
+        if "kind" in kwargs:
+            output["chart"]["type"] = pd2hc_kind(kwargs["kind"])
+
+    def serialize_colors(df, output, *args, **kwargs):
+        pass
+    def serialize_credits(df, output, *args, **kwargs):
+        pass
+    def serialize_data(df, output, *args, **kwargs):
+        pass
+    def serialize_drilldown(df, output, *args, **kwargs):
+        pass
+    def serialize_exporting(df, output, *args, **kwargs):
+        pass
+    def serialize_labels(df, output, *args, **kwargs):
+        pass
+    def serialize_legend(df, output, *args, **kwargs):
+        output["legend"] = {"enabled": kwargs.get("legend", True)}
+    def serialize_loading(df, output, *args, **kwargs):
+        pass
+    def serialize_navigation(df, output, *args, **kwargs):
+        pass
+    def serialize_noData(df, output, *args, **kwargs):
+        pass
+    def serialize_pane(df, output, *args, **kwargs):
+        pass
+    def serialize_plotOptions(df, output, *args, **kwargs):
+        pass
+    def serialize_series(df, output, *args, **kwargs):
+        def is_secondary(c, **kwargs):
+            return c in kwargs.get("secondary_y", [])
+        series = sorted(df.to_dict().items()) if kwargs.get("sort_columns") else df.to_dict().items()
+        output["series"] = []
+        for c, data in series:
+            if df[c].dtype.kind in "biufc":
+                sec = is_secondary(c, **kwargs)
+                d = {"name": c if not sec or not kwargs.get("mark_right", True) else c + " (right)",
+                     "yAxis": int(sec),
+                     "data": list(sorted(data.items()))}
+                if kwargs.get("kind") == "area" and kwargs.get("stacked", True):
+                    d["stacking"] = 'normal'
+                if kwargs.get("style"):
+                    d["dashStyle"] = pd2hc_linestyle(kwargs["style"].get(c, "-"))
+                output["series"].append(d)
+
+    def serialize_subtitle(df, output, *args, **kwargs):
+        pass
+    def serialize_title(df, output, *args, **kwargs):
+        if "title" in kwargs:
+            output["title"] = {"text": kwargs["title"]}
+
+    def serialize_tooltip(df, output, *args, **kwargs):
+        pass
+    def serialize_xAxis(df, output, *args, **kwargs):
+        output["xAxis"] = {}
+        if df.index.name:
+            output["xAxis"]["title"] = {"text": df.index.name}
+        if df.index.dtype.kind == "M":
+            output["xAxis"]["type"] = "datetime"
+        if kwargs.get("grid"):
+            output["xAxis"]["gridLineWidth"] = 1
+            output["xAxis"]["gridLineDashStyle"] = "Dot"
+        if kwargs.get("loglog") or kwargs.get("logx"):
+            output["xAxis"]["type"] = 'logarithmic'
+        if "xlim" in kwargs:
+            output["xAxis"]["min"] = kwargs["xlim"][0]
+            output["xAxis"]["max"] = kwargs["xlim"][1]
+        if "rot" in kwargs:
+            output["xAxis"]["labels"] = {"rotation": kwargs["rot"]}
+        if "fontsize" in kwargs:
+            output["xAxis"].setdefault("labels", {})["style"] = {"fontSize": kwargs["fontsize"]}
+        if "xticks" in kwargs:
+            output["xAxis"]["tickPositions"] = kwargs["xticks"]
+    def serialize_yAxis(df, output, *args, **kwargs):
+        yAxis = {}
+        if kwargs.get("grid"):
+            output["yAxis"]["gridLineWidth"] = 1
+            output["yAxis"]["gridLineDashStyle"] = "Dot"
+        if kwargs.get("loglog") or kwargs.get("logy"):
+            output["yAxis"]["type"] = 'logarithmic'
+        if "ylim" in kwargs:
+            output["yAxis"]["min"] = kwargs["ylim"][0]
+            output["yAxis"]["max"] = kwargs["ylim"][1]
+        if "rot" in kwargs:
+            output["yAxis"]["labels"] = {"rotation": kwargs["rot"]}
+        if "fontsize" in kwargs:
+            output["yAxis"].setdefault("labels", {})["style"] = {"fontSize": kwargs["fontsize"]}
+        if "yticks" in kwargs:
+            output["yAxis"]["tickPositions"] = kwargs["yticks"]
+        output["yAxis"] = [yAxis]
+        if kwargs.get("secondary_y"):
+            yAxis2 = copy.deepcopy(yAxis)
+            yAxis2["opposite"] = True
+            output["yAxis"].append(yAxis2)
+    output = {}
+    if "x" in kwargs:
+        df.index = df.pop(kwargs["x"])
+    if kwargs.get("use_index", True) == False:
+        df = df.reset_index()
+    if "y" in kwargs:
+        df = pandas.DataFrame(df, columns = kwargs["y"])
+    serialize_chart(df, output, *args, **kwargs)
+    serialize_colors(df, output, *args, **kwargs)
+    serialize_credits(df, output, *args, **kwargs)
+    serialize_data(df, output, *args, **kwargs)
+    serialize_drilldown(df, output, *args, **kwargs)
+    serialize_exporting(df, output, *args, **kwargs)
+    serialize_labels(df, output, *args, **kwargs)
+    serialize_legend(df, output, *args, **kwargs)
+    serialize_loading(df, output, *args, **kwargs)
+    serialize_navigation(df, output, *args, **kwargs)
+    serialize_noData(df, output, *args, **kwargs)
+    serialize_pane(df, output, *args, **kwargs)
+    serialize_plotOptions(df, output, *args, **kwargs)
+    serialize_series(df, output, *args, **kwargs)
+    serialize_subtitle(df, output, *args, **kwargs)
+    serialize_title(df, output, *args, **kwargs)
+    serialize_tooltip(df, output, *args, **kwargs)
+    serialize_xAxis(df, output, *args, **kwargs)
+    serialize_yAxis(df, output, *args, **kwargs)
+    return "new Highcharts.Chart(%s);" % JSONEncoder().encode(output)
