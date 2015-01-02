@@ -144,6 +144,7 @@ def serialize(df, *args, **kwargs):
             yAxis2 = copy.deepcopy(yAxis)
             yAxis2["opposite"] = True
             output["yAxis"].append(yAxis2)
+    
     output = {}
     if "x" in kwargs:
         df.index = df.pop(kwargs["x"])
