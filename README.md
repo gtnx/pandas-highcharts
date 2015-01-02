@@ -59,7 +59,7 @@
 ## Installation ##
 
 Install the package using pip
-```bash
+```shell
 pip install pandas-highcharts
 ```
 
@@ -72,5 +72,5 @@ chart = pandas_highcharts.serialize(df, render_to = "my-chart")
 
 In your templates
 ```html
-    <script type="text/javascript">{{chart|safe}}</script>
+<script type="text/javascript">{{chart|safe}}</script>
 ```
