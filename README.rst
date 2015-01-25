@@ -99,6 +99,8 @@ In your templates
 More examples
 -------------
 
+Some examples are available on `nbviewer`_.
+
 Please read the doc for `DataFrame.plot`_.
 
 For example, with the following dataset:
@@ -131,3 +133,4 @@ For example, with the following dataset:
 .. _pandas: https://github.com/pydata/pandas
 .. _DataFrame: http://pandas.pydata.org/pandas-docs/dev/generated/pandas.DataFrame.html
 .. _DataFrame.plot: http://pandas.pydata.org/pandas-docs/dev/generated/pandas.DataFrame.plot.html
+.. _nbviewer: http://nbviewer.ipython.org/github/gtnx/pandas-highcharts/blob/master/example.ipynb

@@ -80,6 +80,8 @@ In your templates
 
 ## More examples ##
 
+Some examples are available on [nbviewer](http://nbviewer.ipython.org/github/gtnx/pandas-highcharts/blob/master/example.ipynb "this nbviewer").
+
 Please read the doc for [DataFrame.plot](http://pandas.pydata.org/pandas-docs/dev/generated/pandas.DataFrame.plot.html "DataFrame plot").
 
 For example, with the following dataset:
