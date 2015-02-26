@@ -13,15 +13,25 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-_pd2hc_kind = {"bar": "column", "barh": "bar", "area": "area", "line": "line"}
+_pd2hc_kind = {
+    "bar": "column",
+    "barh": "bar",
+    "area": "area",
+    "line": "line"
+}
 
 
 def pd2hc_kind(kind):
     if kind not in _pd2hc_kind:
-        raise TypeError("%(kind)s plots are not yet supported" % locals())
+        raise ValueError("%(kind)s plots are not yet supported" % locals())
     return _pd2hc_kind[kind]
 
-_pd2hc_linestyle = {"-": "Solid", "--": "Dash", "-.": "DashDot", ":": "Dot"}
+_pd2hc_linestyle = {
+    "-": "Solid",
+    "--": "Dash",
+    "-.": "DashDot",
+    ":": "Dot"
+}
 
 
 def pd2hc_linestyle(linestyle):
@@ -30,7 +40,7 @@ def pd2hc_linestyle(linestyle):
     return _pd2hc_linestyle[linestyle]
 
 
-def serialize(df, *args, **kwargs):
+def serialize(df, output_type="javascript", *args, **kwargs):
     def serialize_chart(df, output, *args, **kwargs):
         output["chart"] = {"renderTo": kwargs["render_to"]}
         if "figsize" in kwargs:
@@ -58,7 +68,9 @@ def serialize(df, *args, **kwargs):
         pass
 
     def serialize_legend(df, output, *args, **kwargs):
-        output["legend"] = {"enabled": kwargs.get("legend", True)}
+        output["legend"] = {
+            "enabled": kwargs.get("legend", True)
+        }
 
     def serialize_loading(df, output, *args, **kwargs):
         pass
@@ -134,7 +146,7 @@ def serialize(df, *args, **kwargs):
             output["yAxis"]["min"] = kwargs["ylim"][0]
             output["yAxis"]["max"] = kwargs["ylim"][1]
         if "rot" in kwargs:
-            output["yAxis"]["labels"] = {"rotation": kwargs["rot"]}
+            output.setdefault("yAxis", {})["labels"] = {"rotation": kwargs["rot"]}
         if "fontsize" in kwargs:
             output["yAxis"].setdefault("labels", {})["style"] = {"fontSize": kwargs["fontsize"]}
         if "yticks" in kwargs:
@@ -144,6 +156,12 @@ def serialize(df, *args, **kwargs):
             yAxis2 = copy.deepcopy(yAxis)
             yAxis2["opposite"] = True
             output["yAxis"].append(yAxis2)
+
+    def serialize_zoom(df, output, *args, **kwargs):
+        if "zoom" in kwargs:
+            if kwargs["zoom"] not in ("x", "y", "xy"):
+                raise ValueError("zoom must be in ('x', 'y', 'xy')")
+            output["chart"]["zoomType"] = kwargs["zoom"]
 
     output = {}
     df_copy = copy.deepcopy(df)
@@ -172,4 +190,7 @@ def serialize(df, *args, **kwargs):
     serialize_tooltip(df_copy, output, *args, **kwargs)
     serialize_xAxis(df_copy, output, *args, **kwargs)
     serialize_yAxis(df_copy, output, *args, **kwargs)
+    serialize_zoom(df_copy, output, *args, **kwargs)
+    if output_type == "json":
+        return output
     return "new Highcharts.Chart(%s);" % JSONEncoder().encode(output)
