@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 import pandas
 import json
@@ -38,6 +38,9 @@ def serialize(df, *args, **kwargs):
             output["chart"]["height"] = kwargs["figsize"][1]
         if "kind" in kwargs:
             output["chart"]["type"] = pd2hc_kind(kwargs["kind"])
+        if 'zoom' in kwargs:
+            # must be 'x' or 'y'
+            output["chart"]["zoomType"] = kwargs.get('zoom')
 
     def serialize_colors(df, output, *args, **kwargs):
         pass
