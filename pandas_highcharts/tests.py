@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 from core import serialize, JSONEncoder
 import datetime
@@ -12,6 +12,7 @@ df = pandas.DataFrame([
 ])
 
 
+<<<<<<< HEAD
 class CoreTest(TestCase):
     def test_type(self):
         self.assertIsInstance(serialize(df, render_to="chart"), str)
