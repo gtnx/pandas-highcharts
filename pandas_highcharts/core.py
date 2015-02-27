@@ -1,18 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pandas
-import datetime
-import json
-import time
 import copy
-
-
-class JSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, (pandas.tslib.Timestamp, datetime.date, datetime.datetime)):
-            t = time.mktime(obj.timetuple()) - time.mktime((1970, 1, 1, 0, 0, 0, 0, 0, 0))
-            return int(t * 1000)
-        return json.JSONEncoder.default(self, obj)
 
 
 _pd2hc_kind = {
@@ -41,6 +30,8 @@ def pd2hc_linestyle(linestyle):
         raise ValueError("%(linestyle)s linestyles are not yet supported" % locals())
     return _pd2hc_linestyle[linestyle]
 
+def json_encode(obj):
+    return pandas.io.json.dumps(obj)
 
 def serialize(df, output_type="javascript", *args, **kwargs):
     def serialize_chart(df, output, *args, **kwargs):
@@ -195,4 +186,4 @@ def serialize(df, output_type="javascript", *args, **kwargs):
     serialize_zoom(df_copy, output, *args, **kwargs)
     if output_type == "json":
         return output
-    return "new Highcharts.Chart(%s);" % JSONEncoder().encode(output)
+    return "new Highcharts.Chart(%s);" % pandas.io.json.dumps(output)
