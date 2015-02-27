@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 import pandas
+import datetime
 import json
 import time
 import copy
@@ -8,8 +9,9 @@ import copy
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, pandas.tslib.Timestamp):
-            return time.mktime(obj.timetuple()) * 1000
+        if isinstance(obj, (pandas.tslib.Timestamp, datetime.date, datetime.datetime)):
+            t = time.mktime(obj.timetuple()) - time.mktime((1970, 1, 1, 0, 0, 0, 0, 0, 0))
+            return int(t * 1000)
         return json.JSONEncoder.default(self, obj)
 
 
@@ -36,7 +38,7 @@ _pd2hc_linestyle = {
 
 def pd2hc_linestyle(linestyle):
     if linestyle not in _pd2hc_linestyle:
-        raise TypeError("%(linestyle)s linestyles are not yet supported" % locals())
+        raise ValueError("%(linestyle)s linestyles are not yet supported" % locals())
     return _pd2hc_linestyle[linestyle]
 
 
@@ -118,7 +120,7 @@ def serialize(df, output_type="javascript", *args, **kwargs):
         output["xAxis"] = {}
         if df.index.name:
             output["xAxis"]["title"] = {"text": df.index.name}
-        if df.index.dtype.kind == "M":
+        if df.index.dtype.kind in "OM":
             output["xAxis"]["type"] = "datetime"
         if kwargs.get("grid"):
             output["xAxis"]["gridLineWidth"] = 1
@@ -138,19 +140,19 @@ def serialize(df, output_type="javascript", *args, **kwargs):
     def serialize_yAxis(df, output, *args, **kwargs):
         yAxis = {}
         if kwargs.get("grid"):
-            output["yAxis"]["gridLineWidth"] = 1
-            output["yAxis"]["gridLineDashStyle"] = "Dot"
+            yAxis["gridLineWidth"] = 1
+            yAxis["gridLineDashStyle"] = "Dot"
         if kwargs.get("loglog") or kwargs.get("logy"):
-            output["yAxis"]["type"] = 'logarithmic'
+            yAxis["type"] = 'logarithmic'
         if "ylim" in kwargs:
-            output["yAxis"]["min"] = kwargs["ylim"][0]
-            output["yAxis"]["max"] = kwargs["ylim"][1]
+            yAxis["min"] = kwargs["ylim"][0]
+            yAxis["max"] = kwargs["ylim"][1]
         if "rot" in kwargs:
-            output.setdefault("yAxis", {})["labels"] = {"rotation": kwargs["rot"]}
+            yAxis["labels"] = {"rotation": kwargs["rot"]}
         if "fontsize" in kwargs:
-            output["yAxis"].setdefault("labels", {})["style"] = {"fontSize": kwargs["fontsize"]}
+            yAxis.setdefault("labels", {})["style"] = {"fontSize": kwargs["fontsize"]}
         if "yticks" in kwargs:
-            output["yAxis"]["tickPositions"] = kwargs["yticks"]
+            yAxis["tickPositions"] = kwargs["yticks"]
         output["yAxis"] = [yAxis]
         if kwargs.get("secondary_y"):
             yAxis2 = copy.deepcopy(yAxis)
