@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from core import serialize, JSONEncoder
+from core import serialize, json_encode
 import datetime
 import pandas
 import pytz
@@ -61,7 +61,7 @@ class CoreTest(TestCase):
         # self.assertTrue(False)
     
     def test_jsonencoder(self):
-        self.assertEqual(JSONEncoder().encode(datetime.date(1970, 1, 1)), "0")
-        self.assertEqual(JSONEncoder().encode(datetime.date(2015, 1, 1)), "1420070400000")
-        self.assertEqual(JSONEncoder().encode(datetime.datetime(2015, 1, 1)), "1420070400000")
-        self.assertEqual(JSONEncoder().encode(pandas.tslib.Timestamp(1420070400000000000)), "1420070400000")
+        self.assertEqual(json_encode(datetime.date(1970, 1, 1)), "0")
+        self.assertEqual(json_encode(datetime.date(2015, 1, 1)), "1420070400000")
+        self.assertEqual(json_encode(datetime.datetime(2015, 1, 1)), "1420070400000")
+        self.assertEqual(json_encode(pandas.tslib.Timestamp(1420070400000000000)), "1420070400000")
