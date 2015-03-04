@@ -33,7 +33,7 @@ def pd2hc_linestyle(linestyle):
 def json_encode(obj):
     return pandas.io.json.dumps(obj)
 
-def serialize(df, output_type="javascript", *args, **kwargs):
+def serialize(df, output_type="javascript", chart_type="default", *args, **kwargs):
     def serialize_chart(df, output, *args, **kwargs):
         output["chart"] = {"renderTo": kwargs["render_to"]}
         if "figsize" in kwargs:
@@ -186,4 +186,6 @@ def serialize(df, output_type="javascript", *args, **kwargs):
     serialize_zoom(df_copy, output, *args, **kwargs)
     if output_type == "json":
         return output
+    if chart_type == "stock":
+        return "new Highcharts.StockChart(%s);" % json_encode(output)
     return "new Highcharts.Chart(%s);" % json_encode(output)
