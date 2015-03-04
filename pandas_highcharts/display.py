@@ -12,7 +12,8 @@ from IPython.core.display import display, HTML
 from core import serialize
 
 
-HIGHCHARTS_SCRIPTS = """<script src="http://code.highcharts.com/highcharts.js"></script>
+# Note that Highstock includes all Highcharts features.
+HIGHCHARTS_SCRIPTS = """<script src="http://code.highcharts.com/stock/highstock.js"></script>
 <script src="http://code.highcharts.com/modules/exporting.js"></script>
 """
 
@@ -30,15 +31,20 @@ def _generate_div_id_chart(prefix="chart_id", digits=8):
     choices = (random.randrange(0, 52) for _ in xrange(digits))
     return prefix + "".join((string.ascii_letters[x] for x in choices))
 
-def display_highcharts(df, render_to=None, **kwargs):
+def display_charts(df, chart_type="default", render_to=None, **kwargs):
     """Display you DataFrame with Highcharts.
 
     df: DataFrame
+    chart_type: str
+        'default' or 'stock'
     render_to: str
         div id for plotting your data
     """
+    if chart_type not in ("default", "stock"):
+        raise ValueError("Wrong chart_type: accept 'default' or 'stock'.")
     chart_id = render_to if render_to is not None else _generate_div_id_chart()
-    json_data = serialize(df, render_to=chart_id, **kwargs)
+    json_data = serialize(df, render_to=chart_id, chart_type=chart_type,
+                          **kwargs)
     content = """<div id="{chart_id}"</div>
     <script type="text/javascript">{data}</script>"""
     return display(HTML(content.format(chart_id=chart_id,
