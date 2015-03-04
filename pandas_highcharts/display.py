@@ -39,7 +39,7 @@ def display_highcharts(df, render_to=None, **kwargs):
     """
     chart_id = render_to if render_to is not None else _generate_div_id_chart()
     json_data = serialize(df, render_to=chart_id, **kwargs)
-    content = """<div id="{chart_id}""</div>
+    content = """<div id="{chart_id}"</div>
     <script type="text/javascript">{data}</script>"""
     return display(HTML(content.format(chart_id=chart_id,
                                        data=json_data)))
