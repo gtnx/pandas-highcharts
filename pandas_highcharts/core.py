@@ -186,4 +186,4 @@ def serialize(df, output_type="javascript", *args, **kwargs):
     serialize_zoom(df_copy, output, *args, **kwargs)
     if output_type == "json":
         return output
-    return "new Highcharts.Chart(%s);" % pandas.io.json.dumps(output)
+    return "new Highcharts.Chart(%s);" % json_encode(output)
