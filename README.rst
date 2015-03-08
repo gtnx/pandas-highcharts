@@ -1,6 +1,10 @@
 pandas-highcharts
 =================
 
+.. image:: https://travis-ci.org/gtnx/pandas-highcharts.svg?branch=master
+    :target: https://travis-ci.org/gtnx/pandas-highcharts
+
+
 What is it
 ----------
 
