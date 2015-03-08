@@ -30,8 +30,10 @@ def pd2hc_linestyle(linestyle):
         raise ValueError("%(linestyle)s linestyles are not yet supported" % locals())
     return _pd2hc_linestyle[linestyle]
 
+
 def json_encode(obj):
     return pandas.io.json.dumps(obj)
+
 
 def serialize(df, output_type="javascript", chart_type="default", *args, **kwargs):
     def serialize_chart(df, output, *args, **kwargs):

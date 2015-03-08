@@ -3,7 +3,6 @@
 from core import serialize, json_encode
 import datetime
 import pandas
-import pytz
 from unittest import TestCase
 
 df = pandas.DataFrame([
@@ -40,26 +39,23 @@ class CoreTest(TestCase):
         self.assertRaises(ValueError, serialize, df, **{"render_to": "chart", "style": {"a": "u"}})
         obj = serialize(df, render_to="chart", output_type="json", kind="area", stacked=True)
         self.assertEqual(obj.get("series")[0].get("stacking"), "normal")
-        
+
         obj = serialize(df, render_to="chart", output_type="json", grid=True)
         self.assertEqual(obj.get('xAxis', {}).get('gridLineDashStyle'), 'Dot')
         self.assertEqual(obj.get('xAxis', {}).get('gridLineWidth'), 1)
         self.assertEqual(obj.get('yAxis', [])[0].get('gridLineDashStyle'), 'Dot')
         self.assertEqual(obj.get('yAxis', [])[0].get('gridLineWidth'), 1)
-        
+
         obj = serialize(df, render_to="chart", output_type="json", xlim=(0, 1), ylim=(0, 1))
         self.assertEqual(obj.get('xAxis', {}).get('min'), 0)
         self.assertEqual(obj.get('xAxis', {}).get('max'), 1)
         self.assertEqual(obj.get('yAxis', [])[0].get('min'), 0)
         self.assertEqual(obj.get('yAxis', [])[0].get('max'), 1)
-        
+
         obj = serialize(df, render_to="chart", output_type="json", fontsize=12)
         self.assertEqual(obj.get('xAxis', {}).get('labels', {}).get('style', {}).get('fontSize'), 12)
         self.assertEqual(obj.get('yAxis', [])[0].get('labels', {}).get('style', {}).get('fontSize'), 12)
-        
-        # print(obj)
-        # self.assertTrue(False)
-    
+
     def test_jsonencoder(self):
         self.assertEqual(json_encode(datetime.date(1970, 1, 1)), "0")
         self.assertEqual(json_encode(datetime.date(2015, 1, 1)), "1420070400000")

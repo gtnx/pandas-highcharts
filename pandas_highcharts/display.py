@@ -22,14 +22,17 @@ HIGHCHARTS_SCRIPTS = """<script src="http://code.highcharts.com/stock/highstock.
 if 'IPKernelApp' in getipython.get_ipython().config:
     display(HTML(HIGHCHARTS_SCRIPTS))
 
+
 def load_highcharts():
     return display(HTML(HIGHCHARTS_SCRIPTS))
+
 
 def _generate_div_id_chart(prefix="chart_id", digits=8):
     """Generate a random id for div chart.
     """
     choices = (random.randrange(0, 52) for _ in xrange(digits))
     return prefix + "".join((string.ascii_letters[x] for x in choices))
+
 
 def display_charts(df, chart_type="default", render_to=None, **kwargs):
     """Display you DataFrame with Highcharts.
