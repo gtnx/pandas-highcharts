@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from core import serialize, json_encode
+from .core import serialize, json_encode
 import datetime
 import pandas
 from unittest import TestCase
