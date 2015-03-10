@@ -35,7 +35,9 @@ class CoreTest(TestCase):
         obj = serialize(df, render_to="chart", output_type="json", x="t")
         self.assertEqual(obj.get('xAxis', {}).get('type'), 'datetime')
         obj = serialize(df, render_to="chart", output_type="json", x="t", style={"a": ":"})
-        self.assertEqual(obj.get("series")[0].get("dashStyle"), "Dot")
+        for series in obj.get("series"):
+            if series["name"] == "a":
+                self.assertEqual(series.get("dashStyle"), "Dot")
         self.assertRaises(ValueError, serialize, df, **{"render_to": "chart", "style": {"a": "u"}})
         obj = serialize(df, render_to="chart", output_type="json", kind="area", stacked=True)
         self.assertEqual(obj.get("series")[0].get("stacking"), "normal")

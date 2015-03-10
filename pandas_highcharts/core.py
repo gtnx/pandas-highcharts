@@ -90,9 +90,11 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
         for c, data in series:
             if df[c].dtype.kind in "biufc":
                 sec = is_secondary(c, **kwargs)
-                d = {"name": c if not sec or not kwargs.get("mark_right", True) else c + " (right)",
-                     "yAxis": int(sec),
-                     "data": list(sorted(data.items()))}
+                d = {
+                    "name": c if not sec or not kwargs.get("mark_right", True) else c + " (right)",
+                    "yAxis": int(sec),
+                    "data": list(sorted(data.items()))
+                }
                 if kwargs.get("kind") == "area" and kwargs.get("stacked", True):
                     d["stacking"] = 'normal'
                 if kwargs.get("style"):
