@@ -5,6 +5,8 @@
 
 import string
 import random
+import json
+import copy
 
 from IPython.core import getipython
 from IPython.core.display import display, HTML
@@ -52,3 +54,31 @@ def display_charts(df, chart_type="default", render_to=None, **kwargs):
     <script type="text/javascript">{data}</script>"""
     return display(HTML(content.format(chart_id=chart_id,
                                        data=json_data)))
+
+def _series_data_filter(data):
+    """Replace each 'data' key in the list stored under 'series' by "[...]".
+
+    Use to not store and display the series data when you just want display and
+    modify the Highcharts parameters.
+
+    data: dict
+        Serialized DataFrame in a dict for Highcharts
+
+    Returns: a dict with filtered values
+
+    See also `core.serialize`
+    """
+    data = copy.deepcopy(data)
+    if "series" in data:
+        for series in data["series"]:
+            series["data"] = "[...]"
+    return data
+
+def pretty_params(data, indent=2):
+    """Pretty print your Highcharts params (into a JSON).
+
+    data: dict
+        Serialized DataFrame in a dict for Highcharts
+    """
+    data_to_print = _series_data_filter(data)
+    print(json.dumps(data_to_print, indent=indent))
