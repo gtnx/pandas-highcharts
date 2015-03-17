@@ -55,6 +55,7 @@ def display_charts(df, chart_type="default", render_to=None, **kwargs):
     return display(HTML(content.format(chart_id=chart_id,
                                        data=json_data)))
 
+
 def _series_data_filter(data):
     """Replace each 'data' key in the list stored under 'series' by "[...]".
 
@@ -73,6 +74,7 @@ def _series_data_filter(data):
         for series in data["series"]:
             series["data"] = "[...]"
     return data
+
 
 def pretty_params(data, indent=2):
     """Pretty print your Highcharts params (into a JSON).
