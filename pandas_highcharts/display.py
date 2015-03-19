@@ -15,8 +15,8 @@ from core import serialize
 
 
 # Note that Highstock includes all Highcharts features.
-HIGHCHARTS_SCRIPTS = """<script src="http://code.highcharts.com/stock/highstock.js"></script>
-<script src="http://code.highcharts.com/modules/exporting.js"></script>
+HIGHCHARTS_SCRIPTS = """<script src="//code.highcharts.com/stock/highstock.js"></script>
+<script src="//code.highcharts.com/modules/exporting.js"></script>
 """
 
 # Automatically insert the script tag into your Notebook.
