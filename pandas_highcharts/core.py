@@ -37,7 +37,9 @@ def json_encode(obj):
 
 def serialize(df, output_type="javascript", chart_type="default", *args, **kwargs):
     def serialize_chart(df, output, *args, **kwargs):
-        output["chart"] = {"renderTo": kwargs["render_to"]}
+        output["chart"] = {
+            "renderTo": kwargs["render_to"]
+        }
         if "figsize" in kwargs:
             output["chart"]["width"] = kwargs["figsize"][0]
             output["chart"]["height"] = kwargs["figsize"][1]
