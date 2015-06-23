@@ -46,6 +46,8 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
             output["chart"]["height"] = kwargs["figsize"][1]
         if "kind" in kwargs:
             output["chart"]["type"] = pd2hc_kind(kwargs["kind"])
+        if kwargs.get('polar'):
+            output['chart']['polar'] = True
 
     def serialize_colors(df, output, *args, **kwargs):
         pass
@@ -98,6 +100,8 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
                     "yAxis": int(sec),
                     "data": list(sorted(data.items()))
                 }
+                if kwargs.get('polar'):
+                    d['data'] = [v for k, v in d['data']]
                 if kwargs.get("kind") == "area" and kwargs.get("stacked", True):
                     d["stacking"] = 'normal'
                 if kwargs.get("style"):
@@ -119,8 +123,10 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
         output["xAxis"] = {}
         if df.index.name:
             output["xAxis"]["title"] = {"text": df.index.name}
-        if df.index.dtype.kind in "OM":
+        if df.index.dtype.kind in "M":
             output["xAxis"]["type"] = "datetime"
+        if df.index.dtype.kind == 'O':
+            output['xAxis']['categories'] = list(sorted(df.index))
         if kwargs.get("grid"):
             output["xAxis"]["gridLineWidth"] = 1
             output["xAxis"]["gridLineDashStyle"] = "Dot"

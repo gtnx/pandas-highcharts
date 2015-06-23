@@ -16,6 +16,7 @@ from core import serialize
 
 # Note that Highstock includes all Highcharts features.
 HIGHCHARTS_SCRIPTS = """<script src="//code.highcharts.com/stock/highstock.js"></script>
+<script src="//code.highcharts.com/highcharts-more.js"></script>
 <script src="//code.highcharts.com/modules/exporting.js"></script>
 """
 
