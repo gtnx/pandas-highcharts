@@ -3,7 +3,8 @@ pandas-highcharts
 
 .. image:: https://travis-ci.org/gtnx/pandas-highcharts.svg?branch=master
     :target: https://travis-ci.org/gtnx/pandas-highcharts
-
+.. image:: https://coveralls.io/repos/gtnx/pandas-highcharts/badge.svg
+    :target: https://coveralls.io/r/gtnx/pandas-highcharts
 
 What is it
 ----------
