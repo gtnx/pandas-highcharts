@@ -5,7 +5,7 @@ from setuptools import find_packages
 
 setup(
     name='pandas-highcharts',
-    version='0.4.3',
+    version='0.4.4',
     author='Guillaume Thomas',
     author_email='guillaume.thomas642@gmail.com',
     license='LICENSE',
