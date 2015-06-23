@@ -71,6 +71,10 @@ Features
    -  xerr
    -  kwds
 
+-  You can specify those specific highcharts parameters:
+
+   - tooltip
+
 -  Static files (highcharts.js) are not embedded
 
 Installation
@@ -91,14 +95,16 @@ Import it in your views
 
     import pandas_highcharts
     df = ... # create your dataframe here
-    chart = pandas_highcharts.serialize(df, render_to = "my-chart")
+    chart = pandas_highcharts.serialize(df, render_to='my-chart', output_type='json')
 
 In your templates
 
 .. code:: html
 
     <div id="my-chart"></div>
-    <script type="text/javascript">{{chart|safe}}</script>
+    <script type="text/javascript">
+      new Highcharts.Chart({{chart|safe}});
+    </script>
 
 More examples
 -------------
