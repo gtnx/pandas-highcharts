@@ -8,7 +8,8 @@ _pd2hc_kind = {
     "bar": "column",
     "barh": "bar",
     "area": "area",
-    "line": "line"
+    "line": "line",
+    "pie": "pie"
 }
 
 
@@ -111,7 +112,8 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
             output["title"] = {"text": kwargs["title"]}
 
     def serialize_tooltip(df, output, *args, **kwargs):
-        pass
+        if 'tooltip' in kwargs:
+            output['tooltip'] = kwargs['tooltip']
 
     def serialize_xAxis(df, output, *args, **kwargs):
         output["xAxis"] = {}

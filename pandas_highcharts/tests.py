@@ -6,8 +6,8 @@ import pandas
 from unittest import TestCase
 
 df = pandas.DataFrame([
-    {"a": 1, "b": 2, "c": 3, "t": datetime.date(2015, 1, 1)},
-    {"a": 2, "b": 4, "c": 6, "t": datetime.date(2015, 1, 2)}
+    {'a': 1, 'b': 2, 'c': 3, 't': datetime.date(2015, 1, 1), 's': 's1'},
+    {'a': 2, 'b': 4, 'c': 6, 't': datetime.date(2015, 1, 2), 's': 's2'}
 ])
 
 
@@ -54,9 +54,17 @@ class CoreTest(TestCase):
         self.assertEqual(obj.get('yAxis', [])[0].get('min'), 0)
         self.assertEqual(obj.get('yAxis', [])[0].get('max'), 1)
 
-        obj = serialize(df, render_to="chart", output_type="json", fontsize=12)
+        obj = serialize(df, render_to="chart", output_type="json", fontsize=12, figsize=(4, 5))
         self.assertEqual(obj.get('xAxis', {}).get('labels', {}).get('style', {}).get('fontSize'), 12)
         self.assertEqual(obj.get('yAxis', [])[0].get('labels', {}).get('style', {}).get('fontSize'), 12)
+
+        obj = serialize(df, render_to="chart", output_type="json", title='Chart', xticks=[], yticks=[])
+        self.assertTrue(obj.get('title'), {}).get('text')
+        self.assertTrue(obj.get('xAxis'), {}).get('tickPositions')
+        self.assertTrue(obj.get('yAxis'), {}).get('tickPositions')
+
+        obj = serialize(df, render_to="chart", output_type="json", fontsize=12, kind='pie', x='s', y=['a'], tooltip={'pointFormat': '{series.name}: <b>{point.percentage:.1f}%</b>'})
+        self.assertTrue(obj.get('tooltip'))
 
     def test_jsonencoder(self):
         self.assertEqual(json_encode(datetime.date(1970, 1, 1)), "0")
