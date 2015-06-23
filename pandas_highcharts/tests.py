@@ -6,8 +6,8 @@ import pandas
 from unittest import TestCase
 
 df = pandas.DataFrame([
-    {'a': 1, 'b': 2, 'c': 3, 't': datetime.date(2015, 1, 1), 's': 's1'},
-    {'a': 2, 'b': 4, 'c': 6, 't': datetime.date(2015, 1, 2), 's': 's2'}
+    {'a': 1, 'b': 2, 'c': 3, 't': datetime.datetime(2015, 1, 1), 's': 's1'},
+    {'a': 2, 'b': 4, 'c': 6, 't': datetime.datetime(2015, 1, 2), 's': 's2'}
 ])
 
 
@@ -66,6 +66,9 @@ class CoreTest(TestCase):
 
         obj = serialize(df, render_to="chart", output_type="json", fontsize=12, kind='pie', x='s', y=['a'], tooltip={'pointFormat': '{series.name}: <b>{point.percentage:.1f}%</b>'})
         self.assertTrue(obj.get('tooltip'))
+
+        obj = serialize(df, render_to="chart", output_type="json", polar=True, x='s', y=['a'])
+        self.assertTrue(obj.get('chart', {}).get('polar'))
 
     def test_jsonencoder(self):
         self.assertEqual(json_encode(datetime.date(1970, 1, 1)), "0")
