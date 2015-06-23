@@ -59,9 +59,9 @@ class CoreTest(TestCase):
         self.assertEqual(obj.get('yAxis', [])[0].get('labels', {}).get('style', {}).get('fontSize'), 12)
 
         obj = serialize(df, render_to="chart", output_type="json", title='Chart', xticks=[], yticks=[])
-        self.assertTrue(obj.get('title'), {}).get('text')
-        self.assertTrue(obj.get('xAxis'), {}).get('tickPositions')
-        self.assertTrue(obj.get('yAxis'), {}).get('tickPositions')
+        self.assertTrue(obj.get('title'), {}.get('text'))
+        self.assertTrue(obj.get('xAxis'), {}.get('tickPositions'))
+        self.assertTrue(obj.get('yAxis'), {}.get('tickPositions'))
 
         obj = serialize(df, render_to="chart", output_type="json", fontsize=12, kind='pie', x='s', y=['a'], tooltip={'pointFormat': '{series.name}: <b>{point.percentage:.1f}%</b>'})
         self.assertTrue(obj.get('tooltip'))
