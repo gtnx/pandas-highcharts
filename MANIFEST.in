@@ -1,6 +1,3 @@
-exclude pandas_highcharts/models.py
-exclude pandas_highcharts/views.py
-exclude pandas_highcharts/urls.py
 include pandas_highcharts/core.py
 include pandas_highcharts/display.py
 include pandas_highcharts/tests.py
