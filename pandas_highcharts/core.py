@@ -90,22 +90,24 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
     def serialize_series(df, output, *args, **kwargs):
         def is_secondary(c, **kwargs):
             return c in kwargs.get("secondary_y", [])
-        series = sorted(df.to_dict().items()) if kwargs.get("sort_columns") else df.to_dict().items()
+        if kwargs.get('sort_columns'):
+            df = df.sort_index()
+        series = df.to_dict('series')
         output["series"] = []
-        for c, data in series:
-            if df[c].dtype.kind in "biufc":
-                sec = is_secondary(c, **kwargs)
+        for name, data in series.items():
+            if df[name].dtype.kind in "biufc":
+                sec = is_secondary(name, **kwargs)
                 d = {
-                    "name": c if not sec or not kwargs.get("mark_right", True) else c + " (right)",
+                    "name": name if not sec or not kwargs.get("mark_right", True) else name + " (right)",
                     "yAxis": int(sec),
-                    "data": list(sorted(data.items()))
+                    "data": zip(df.index, data.tolist())
                 }
                 if kwargs.get('polar'):
                     d['data'] = [v for k, v in d['data']]
                 if kwargs.get("kind") == "area" and kwargs.get("stacked", True):
                     d["stacking"] = 'normal'
                 if kwargs.get("style"):
-                    d["dashStyle"] = pd2hc_linestyle(kwargs["style"].get(c, "-"))
+                    d["dashStyle"] = pd2hc_linestyle(kwargs["style"].get(name, "-"))
                 output["series"].append(d)
 
     def serialize_subtitle(df, output, *args, **kwargs):
@@ -126,7 +128,7 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
         if df.index.dtype.kind in "M":
             output["xAxis"]["type"] = "datetime"
         if df.index.dtype.kind == 'O':
-            output['xAxis']['categories'] = list(sorted(df.index))
+            output['xAxis']['categories'] = sorted(list(df.index)) if kwargs.get('sort_columns') else list(df.index)
         if kwargs.get("grid"):
             output["xAxis"]["gridLineWidth"] = 1
             output["xAxis"]["gridLineDashStyle"] = "Dot"
