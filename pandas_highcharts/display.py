@@ -15,19 +15,20 @@ from core import serialize
 
 
 # Note that Highstock includes all Highcharts features.
-HIGHCHARTS_SCRIPTS = """<script src="//code.highcharts.com/stock/highstock.js"></script>
+HIGHCHARTS_SCRIPTS = """
+<script src="//code.highcharts.com/stock/highstock.js"></script>
 <script src="//code.highcharts.com/highcharts-more.js"></script>
 <script src="//code.highcharts.com/modules/exporting.js"></script>
 """
 
-# Automatically insert the script tag into your Notebook.
-# Call when you import this module.
-if 'IPKernelApp' in getipython.get_ipython().config:
-    display(HTML(HIGHCHARTS_SCRIPTS))
-
 
 def load_highcharts():
     return display(HTML(HIGHCHARTS_SCRIPTS))
+
+# Automatically insert the script tag into your Notebook.
+# Call when you import this module.
+if 'IPKernelApp' in getipython.get_ipython().config:
+    load_highcharts()
 
 
 def _generate_div_id_chart(prefix="chart_id", digits=8):
