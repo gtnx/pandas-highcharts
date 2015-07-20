@@ -9,6 +9,7 @@ _pd2hc_kind = {
     "barh": "bar",
     "area": "area",
     "line": "line",
+    "spline": "spline",
     "pie": "pie"
 }
 
@@ -104,7 +105,9 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
                 }
                 if kwargs.get('polar'):
                     d['data'] = [v for k, v in d['data']]
-                if kwargs.get("kind") == "area" and kwargs.get("stacked", True):
+                if kwargs.get('compare'):
+                    d['compare'] = 'percent'
+                if kwargs.get("kind") in ("area", "bar") and kwargs.get("stacked", True):
                     d["stacking"] = 'normal'
                 if kwargs.get("style"):
                     d["dashStyle"] = pd2hc_linestyle(kwargs["style"].get(name, "-"))
