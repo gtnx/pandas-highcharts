@@ -106,7 +106,7 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
                 if kwargs.get('polar'):
                     d['data'] = [v for k, v in d['data']]
                 if kwargs.get('compare'):
-                    d['compare'] = 'percent'
+                    d['compare'] = kwargs.get('compare')  # either `value` or `percent`
                 if kwargs.get("kind") in ("area", "bar") and kwargs.get("stacked", True):
                     d["stacking"] = 'normal'
                 if kwargs.get("style"):
