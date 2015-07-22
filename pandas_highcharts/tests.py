@@ -43,6 +43,9 @@ class CoreTest(TestCase):
         obj = serialize(df, render_to="chart", output_type="json", kind="area", stacked=True)
         self.assertEqual(obj.get("series")[0].get("stacking"), "normal")
 
+        obj = serialize(df, render_to="chart", output_type="json", kind="bar", stacked=True)
+        self.assertEqual(obj.get("series")[0].get("stacking"), "normal")
+
         obj = serialize(df, render_to="chart", output_type="json", grid=True)
         self.assertEqual(obj.get('xAxis', {}).get('gridLineDashStyle'), 'Dot')
         self.assertEqual(obj.get('xAxis', {}).get('gridLineWidth'), 1)
@@ -70,6 +73,9 @@ class CoreTest(TestCase):
 
         obj = serialize(df, render_to="chart", output_type="json", polar=True, x='s', y=['a'])
         self.assertTrue(obj.get('chart', {}).get('polar'))
+
+        obj = serialize(df, render_to="chart", compare='percent', output_type="json")
+        self.assertTrue(obj.get('series', {})[0].get('compare') == 'percent')
 
     def test_jsonencoder(self):
         self.assertEqual(json_encode(datetime.date(1970, 1, 1)), "0")
