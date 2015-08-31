@@ -16,6 +16,11 @@ class CoreTest(TestCase):
         self.assertEqual(type(serialize(df, render_to="chart")), str)
         obj = serialize(df, render_to="chart", output_type="json")
         self.assertEqual(type(obj), dict)
+        self.assertTrue('series' in obj)
+        for series in obj['series']:
+            if series['name'] == 'a':
+                self.assertTrue('data' in series)
+                self.assertEqual(series['data'], [(0, 1), (1, 2)])
 
         obj = serialize(df, render_to="chart", output_type="json", zoom="xy")
         self.assertTrue("chart" in obj)
