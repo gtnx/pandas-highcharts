@@ -1,6 +1,7 @@
 include requirements.txt
 include *.ipynb
 include *.yml
+include *.rst
 include LICENSE
 include tox.ini
 recursive-include pandas_highcharts *.csv

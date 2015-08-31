@@ -107,6 +107,11 @@ In your templates
       new Highcharts.Chart({{chart|safe}});
     </script>
 
+Contributing
+------------
+
+See CONTRIBUTING.rst for information on how to contribute to pandas-highcharts.
+
 More examples
 -------------
 
