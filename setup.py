@@ -11,10 +11,7 @@ setup(
     license='LICENSE',
     description='pandas-highcharts is a Python package which allows you to easily build Highcharts plots with pandas.DataFrame objects.',
     url='https://github.com/gtnx/pandas-highcharts',
-    install_requires=map(
-        lambda line: line.strip("\n"),
-        open("requirements.txt", "r").readlines()
-    ),
+    install_requires=[line.strip("\n") for line in open("requirements.txt", "r").readlines()],
     include_package_data=True,
     packages=find_packages(),
 )

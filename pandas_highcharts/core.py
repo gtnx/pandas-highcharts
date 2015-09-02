@@ -100,7 +100,7 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
                 d = {
                     "name": name if not sec or not kwargs.get("mark_right", True) else name + " (right)",
                     "yAxis": int(sec),
-                    "data": zip(df.index, data.tolist())
+                    "data": list(zip(df.index, data.tolist()))
                 }
                 if kwargs.get('polar'):
                     d['data'] = [v for k, v in d['data']]
@@ -200,8 +200,10 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
     serialize_xAxis(df_copy, output, *args, **kwargs)
     serialize_yAxis(df_copy, output, *args, **kwargs)
     serialize_zoom(df_copy, output, *args, **kwargs)
-    if output_type == "json":
+    if output_type == "dict":
         return output
+    if output_type == "json":
+        return json_encode(output)
     if chart_type == "stock":
         return "new Highcharts.StockChart(%s);" % json_encode(output)
     return "new Highcharts.Chart(%s);" % json_encode(output)

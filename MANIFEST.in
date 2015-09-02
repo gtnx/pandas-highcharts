@@ -1,4 +1,7 @@
-include pandas_highcharts/core.py
-include pandas_highcharts/display.py
-include pandas_highcharts/tests.py
 include requirements.txt
+include *.ipynb
+include *.yml
+include *.rst
+include LICENSE
+include tox.ini
+recursive-include pandas_highcharts *.csv
