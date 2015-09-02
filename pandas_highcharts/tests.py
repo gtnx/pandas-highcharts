@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from .core import serialize, json_encode
+from __future__ import absolute_import
+
 import datetime
 import json
 import pandas
 from unittest import TestCase
+
+from .core import serialize, json_encode
 
 df = pandas.DataFrame([
     {'a': 1, 'b': 2, 'c': 3, 't': datetime.datetime(2015, 1, 1), 's': 's1'},

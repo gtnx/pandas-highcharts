@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import absolute_import
+
 """Functions to quickly display charts in a Notebook.
 """
 
@@ -11,7 +13,7 @@ import copy
 from IPython.core import getipython
 from IPython.core.display import display, HTML
 
-from core import serialize
+from .core import serialize
 
 
 # Note that Highstock includes all Highcharts features.
@@ -34,7 +36,7 @@ if 'IPKernelApp' in getipython.get_ipython().config:
 def _generate_div_id_chart(prefix="chart_id", digits=8):
     """Generate a random id for div chart.
     """
-    choices = (random.randrange(0, 52) for _ in xrange(digits))
+    choices = (random.randrange(0, 52) for _ in range(digits))
     return prefix + "".join((string.ascii_letters[x] for x in choices))
 
 
