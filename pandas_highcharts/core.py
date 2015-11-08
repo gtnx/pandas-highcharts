@@ -109,6 +109,7 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
                 if kwargs.get("style"):
                     d["dashStyle"] = pd2hc_linestyle(kwargs["style"].get(name, "-"))
                 output["series"].append(d)
+        output['series'].sort(key=lambda s: s['name'])
 
     def serialize_subtitle(df, output, *args, **kwargs):
         pass
