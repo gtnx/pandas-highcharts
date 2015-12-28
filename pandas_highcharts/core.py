@@ -100,7 +100,7 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
                 d = {
                     "name": name if not sec or not kwargs.get("mark_right", True) else name + " (right)",
                     "yAxis": int(sec),
-                    "data": list(zip(df.index, data.tolist()))
+                    "data": list(zip(df.index, data.values.tolist()))
                 }
                 if kwargs.get('polar'):
                     d['data'] = [v for k, v in d['data']]
