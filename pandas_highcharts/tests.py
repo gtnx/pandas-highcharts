@@ -80,6 +80,12 @@ class CoreTest(TestCase):
         obj = serialize(df, render_to="chart", output_type="dict", polar=True, x='s', y=['a'])
         self.assertTrue(obj.get('chart', {}).get('polar'))
 
+        df2 = pandas.DataFrame({'s': [2, 1]}, index=['b', 'a'])
+        obj = serialize(df2, render_to='chart', output_type='dict', sort_columns=True)
+        self.assertEqual(obj['series'], [{'data': [('a', 1), ('b', 2)], 'name': 's', 'yAxis': 0}])
+        obj = serialize(df2, render_to='chart', output_type='dict')
+        self.assertEqual(obj['series'], [{'data': [('b', 2), ('a', 1)], 'name': 's', 'yAxis': 0}])
+
     def test_json_output(self):
         json_output = serialize(df, output_type="json")
         self.assertEqual(type(json_output), str)
