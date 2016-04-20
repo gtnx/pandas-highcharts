@@ -87,6 +87,12 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
     def serialize_plotOptions(df, output, *args, **kwargs):
         pass
 
+    def serialize_rangeSelector(df, output, *args, **kwargs):
+        output["rangeSelector"] = {
+            "allButtonsEnabled": kwargs.get("range_all_buttons_enabled", False),
+            "selected": kwargs.get("range_selected", 5)
+        }
+
     def serialize_series(df, output, *args, **kwargs):
         def is_secondary(c, **kwargs):
             return c in kwargs.get("secondary_y", [])
@@ -206,5 +212,6 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
     if output_type == "json":
         return json_encode(output)
     if chart_type == "stock":
+        serialize_rangeSelector(df, output, *args, **kwargs)
         return "new Highcharts.StockChart(%s);" % json_encode(output)
     return "new Highcharts.Chart(%s);" % json_encode(output)
