@@ -79,6 +79,10 @@ class CoreTest(TestCase):
 
         obj = serialize(df, render_to="chart", output_type="dict", polar=True, x='s', y=['a'])
         self.assertTrue(obj.get('chart', {}).get('polar'))
+        
+        obj = serialize(df, render_to="chart", output_type="dict", kind="stock", range_all_buttons_enabled=True, range_selected=3)
+        self.assertEqual(obj.get("chart").get("rangeSelector", {}).get("allButtonsEnabled", False), True)
+        self.assertEqual(obj.get("chart").get("rangeSelector", {}).get("selected", 5), 3)
 
         df2 = pandas.DataFrame({'s': [2, 1]}, index=['b', 'a'])
         obj = serialize(df2, render_to='chart', output_type='dict', sort_columns=True)
