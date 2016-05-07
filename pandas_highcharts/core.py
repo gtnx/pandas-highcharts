@@ -116,7 +116,10 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
 
     def serialize_title(df, output, *args, **kwargs):
         if "title" in kwargs:
-            output["title"] = {"text": kwargs["title"]}
+            if isinstance(kwargs["title"], dict):
+                output["title"] = kwargs["title"]
+            else:
+                output["title"] = {"text": kwargs["title"]}
 
     def serialize_tooltip(df, output, *args, **kwargs):
         if 'tooltip' in kwargs:

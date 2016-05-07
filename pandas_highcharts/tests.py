@@ -14,7 +14,6 @@ df = pandas.DataFrame([
     {'a': 2, 'b': 4, 'c': 6, 't': datetime.datetime(2015, 1, 2), 's': 's2'}
 ])
 
-
 class CoreTest(TestCase):
     def test_type(self):
         self.assertEqual(type(serialize(df, render_to="chart")), str)
@@ -74,6 +73,14 @@ class CoreTest(TestCase):
         for yaxis in obj.get('yAxis', []):
             self.assertTrue(yaxis.get('tickPositions'))
 
+        obj = serialize(df, render_to="chart", output_type="dict", title={"text": 'Chart',"x": -20}, xticks=[1], yticks=[2])
+        print obj
+        self.assertTrue(obj.get('title', {}).get('text'))
+        self.assertTrue(obj.get('title', {}).get('x'))
+        self.assertTrue(obj.get('xAxis', {}).get('tickPositions'))
+        for yaxis in obj.get('yAxis', []):
+            self.assertTrue(yaxis.get('tickPositions'))
+
         obj = serialize(df, render_to="chart", output_type="dict", fontsize=12, kind='pie', x='s', y=['a'], tooltip={'pointFormat': '{series.name}: <b>{point.percentage:.1f}%</b>'})
         self.assertTrue(obj.get('tooltip'))
 
@@ -97,3 +104,5 @@ class CoreTest(TestCase):
         self.assertEqual(json_encode(datetime.date(2015, 1, 1)), "1420070400000")
         self.assertEqual(json_encode(datetime.datetime(2015, 1, 1)), "1420070400000")
         self.assertEqual(json_encode(pandas.tslib.Timestamp(1420070400000000000)), "1420070400000")
+
+
