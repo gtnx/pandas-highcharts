@@ -74,7 +74,6 @@ class CoreTest(TestCase):
             self.assertTrue(yaxis.get('tickPositions'))
 
         obj = serialize(df, render_to="chart", output_type="dict", title={"text": 'Chart',"x": -20}, xticks=[1], yticks=[2])
-        print obj
         self.assertTrue(obj.get('title', {}).get('text'))
         self.assertTrue(obj.get('title', {}).get('x'))
         self.assertTrue(obj.get('xAxis', {}).get('tickPositions'))
