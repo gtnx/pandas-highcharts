@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 
+# @Author: phil
+# @Date:   2016-11-25T10:16:14+08:00
+# @Last modified by:   phil
+# @Last modified time: 2016-11-28T10:56:32+08:00
+from string import Template
+
 import pandas
 import copy
 
+import re
 
 _pd2hc_kind = {
     "bar": "column",
@@ -17,6 +24,7 @@ def pd2hc_kind(kind):
     if kind not in _pd2hc_kind:
         raise ValueError("%(kind)s plots are not yet supported" % locals())
     return _pd2hc_kind[kind]
+
 
 _pd2hc_linestyle = {
     "-": "Solid",
@@ -90,6 +98,7 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
     def serialize_series(df, output, *args, **kwargs):
         def is_secondary(c, **kwargs):
             return c in kwargs.get("secondary_y", [])
+
         if kwargs.get('sort_columns'):
             df = df.sort_index()
         series = df.to_dict('series')
@@ -120,7 +129,27 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
 
     def serialize_tooltip(df, output, *args, **kwargs):
         if 'tooltip' in kwargs:
+            # if we want to display more info in tooltip,
+            # we should provide `field__additional_info`
+            additional_info_keys = [key for key in kwargs['tooltip'] if 'additional_info' in key]
+            if additional_info_keys:
+                for key in additional_info_keys:
+                    field, _ = key.split('__')
+                    additional_info = kwargs['tooltip'].pop(key)
+                    field_idx = [idx for idx, dic in enumerate(output['series']) if dic['name'] == field][0]
+                    dic = output['series'][field_idx]
+                    dic['data'] = [{'x': x, 'y': y, 'additional_info': additional_info[idx]} for idx, (x, y) in
+                                   enumerate(dic['data'])]
+
             output['tooltip'] = kwargs['tooltip']
+
+            if 'formatter' in output['tooltip']:
+                output['___functions___']['tooltip__formatter'] = output['tooltip'].pop('formatter')
+                output['tooltip']['formatter'] = "$tooltip__formatter"
+
+            if 'pointFormatter' in output['tooltip']:
+                output['___functions___']['tooltip__pointFormatter'] = output['tooltip'].pop('pointFormatter')
+                output['tooltip']['pointFormatter'] = '$tooltip_pointFormatter'
 
     def serialize_xAxis(df, output, *args, **kwargs):
         output["xAxis"] = {}
@@ -173,7 +202,7 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
                 raise ValueError("zoom must be in ('x', 'y', 'xy')")
             output["chart"]["zoomType"] = kwargs["zoom"]
 
-    output = {}
+    output = {'___functions___': {}}
     df_copy = copy.deepcopy(df)
     if "x" in kwargs:
         df_copy.index = df_copy.pop(kwargs["x"])
@@ -201,10 +230,25 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
     serialize_xAxis(df_copy, output, *args, **kwargs)
     serialize_yAxis(df_copy, output, *args, **kwargs)
     serialize_zoom(df_copy, output, *args, **kwargs)
+
+    functions = output.pop('___functions___')
     if output_type == "dict":
+        def update_dict(d, up):
+            for k, v in d.items():
+                if isinstance(v, str) and v.startswith('$'):
+                    d[k] = up[v.replace('$', '')]
+                if isinstance(v, dict):
+                    update_dict(v, up)
+        # fixme: this is wrong!!!
+        update_dict(output, functions)
         return output
+    json_output = """{}""".format(json_encode(output))
+    json_output = re.sub('"(\$\w+)"', r'\1', json_output)
     if output_type == "json":
-        return json_encode(output)
+        template = Template("""{}""".format(json_output))
+        return template.substitute(functions)
     if chart_type == "stock":
-        return "new Highcharts.StockChart(%s);" % json_encode(output)
-    return "new Highcharts.Chart(%s);" % json_encode(output)
+        high_stocks = Template("""new Highcharts.StockChart(%s);""" % json_output)
+        return high_stocks.substitute(functions)
+    high_charts = Template("new Highcharts.Chart(%s);" % json_output)
+    return high_charts.substitute(functions)
