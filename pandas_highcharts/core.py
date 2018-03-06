@@ -142,6 +142,8 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
             output["xAxis"]["labels"] = {"rotation": kwargs["rot"]}
         if "fontsize" in kwargs:
             output["xAxis"].setdefault("labels", {})["style"] = {"fontSize": kwargs["fontsize"]}
+        if "sharex" in kwargs:
+            output["xAxis"].setdefault("labels", {})["enabled"] = kwargs["sharex"]
         if "xticks" in kwargs:
             output["xAxis"]["tickPositions"] = kwargs["xticks"]
 
@@ -159,6 +161,8 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
             yAxis["labels"] = {"rotation": kwargs["rot"]}
         if "fontsize" in kwargs:
             yAxis.setdefault("labels", {})["style"] = {"fontSize": kwargs["fontsize"]}
+        if "sharey" in kwargs:
+            yAxis.setdefault("labels", {})["enabled"] = kwargs["sharey"] 
         if "yticks" in kwargs:
             yAxis["tickPositions"] = kwargs["yticks"]
         output["yAxis"] = [yAxis]
