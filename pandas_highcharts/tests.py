@@ -86,6 +86,19 @@ class CoreTest(TestCase):
         obj = serialize(df2, render_to='chart', output_type='dict')
         self.assertEqual(obj['series'], [{'data': [('b', 2), ('a', 1)], 'name': 's', 'yAxis': 0}])
 
+    def test_serialize_plotOptions(self):
+
+        # test compare and compareBase
+        plotOptions = {
+            "series":
+                {
+                    "compare": "percent",
+                    "compareBase": 100
+                }
+        }
+        obj = serialize(df, render_to="chart", output_type="dict", plotOptions=plotOptions)
+        self.assertEqual(obj['plotOptions'], plotOptions)
+
     def test_json_output(self):
         json_output = serialize(df, output_type="json")
         self.assertEqual(type(json_output), str)
