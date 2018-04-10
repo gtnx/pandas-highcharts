@@ -85,7 +85,31 @@ def serialize(df, output_type="javascript", chart_type="default", *args, **kwarg
         pass
 
     def serialize_plotOptions(df, output, *args, **kwargs):
-        pass
+        if "plotOptions" in kwargs:
+
+            plotOptionsDict = {}
+
+            for k1, v1 in kwargs["plotOptions"].items():
+                # add series options
+                if "series" == k1:
+                    # add safety conditions here
+                    for k2, v2 in v1.items():
+                        if k2 == "compare":
+                            if v2 not in ("percent", "value"):
+                                raise(ValueError("compare option in plotOptions - series can only be percent or value"))
+
+                    # add series options to plotOptions
+                    if v1:
+                        plotOptionsDict[k1] = v1
+
+                # every option has not been tested yet
+                else:
+                    plotOptionsDict[k1] = v1
+                    # raise(NotImplementedError("Other plotOptions besides series are not tested yet!"))
+                    # I left this error commented because it is a design choice on where the error should be thrown
+
+            if plotOptionsDict:
+                output["plotOptions"] = plotOptionsDict
 
     def serialize_series(df, output, *args, **kwargs):
         def is_secondary(c, **kwargs):
