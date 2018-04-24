@@ -94,9 +94,9 @@ Import it in your views
 
 .. code:: python
 
-    import pandas_highcharts
+    import pandas_highcharts.core
     df = ... # create your dataframe here
-    chart = pandas_highcharts.serialize(df, render_to='my-chart', output_type='json')
+    chart = pandas_highcharts..core.serialize(df, render_to='my-chart', output_type='json')
 
 In your templates
 
